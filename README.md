@@ -1,79 +1,42 @@
-# JavaScriptRuntimeError
+## Different JavaScript Runtime Errors when using iOS Prebuilds
 
-![Build](https://github.com/gabrieldonadel/JavaScriptRuntimeError/workflows/Pre%20Merge%20Checks/badge.svg)
+This repository is a minimal reproducer for a bug in react-native 0.81.0 where the app throws different JavaScript runtime errors (thrown from JSI) when using iOS prebuilds.
 
-This is your new React Native Reproducer project.
+<table>
+  <tr>
+    <th>Building from source</th>
+    <th>iOS Prebuild</th>
+  </tr>
+  <tr>
+    <td>My custom js error message</td>
+    <td>Non-js exception: Exception in HostFunction: My custom js error message</td>
+  </tr>
+  <tr>
+    <td>
+    <img src="./assets/source.png" alt="source image" height="600">
+</td>
+    <td>
+<img src="./assets/prebuild.png" alt="prebuild image" height="600"></td>
+  </tr>
+</table>
 
-# Reproducer TODO list
+This repository is based on the [reproducer-react-native template](https://github.com/react-native-community/reproducer-react-native) + the [Pure C++ Turbo Native Module example](https://reactnative.dev/docs/the-new-architecture/pure-cxx-modules).
 
-- [x] 1. Create a new reproducer project.
-- [ ] 2. Git clone your repository locally.
-- [ ] 3. Edit the project to reproduce the failure you're seeing.
-- [ ] 4. Push your changes, so that Github Actions can run the CI.
-- [ ] 5. Make sure the repository is public and share the link with the issue you reported.
+You can reproduce the issue by following these steps:
 
-# How to use this Reproducer
+1. Run `pod install`
 
-This project has been created with `npx @react-native-community/cli init` and is a vanilla React Native app.
+2. Build and run the app on iOS
 
-> [!IMPORTANT]  
-> Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/set-up-your-environment) so that you have a working environment locally.
+3. Press "Reverse" and observe the standard error message in the Redbox.
 
-## Step 1: Start the Metro Server
+4. Reinstall pods using prebuilds `RCT_USE_RN_DEP=1 RCT_USE_PREBUILT_RNCORE=1 pod install`
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+5. Build and run the app on iOS again
 
-To start Metro, run the following command from the _root_ of your React Native project:
+6. Press "Reverse" and observe the different error message in the Redbox.
 
-```bash
-# using npm
-npm start
+Observe that the error message is different on the DevTools Console as well
 
-# OR using Yarn
-yarn start
-```
-
-## Step 2: Start your Application
-
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
-
-### For Android
-
-```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### For iOS
-
-First, make sure you install dependencies with:
-
-```bash
-cd ios && bundle install && bundle exec pod install
-```
-
-Then you can run the iOS app with:
-
-```bash
-# using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
-
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
-
-## Step 3: Modifying your App
-
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+<img src="./assets/source-console.png" alt="source image" height="300">
+<img src="./assets/prebuild-console.png" alt="prebuild image" height="400">
